@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2023-07-31T14:56:28Z</date>
+    <groups>
+        <group>
+            <name>Templates Applications</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Check Unsupported items</template>
+            <name>Template Check Unsupported items</name>
+            <groups>
+                <group>
+                    <name>Templates Applications</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>API</name>
+                </application>
+                <application>
+                    <name>Zabbix server</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Unsupported items by type</name>
+                    <key>unsupported[&quot;by type&quot;]</key>
+                    <delay>10m</delay>
+                    <history>0</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <applications>
+                        <application>
+                            <name>Zabbix server</name>
+                        </application>
+                    </applications>
+                    <preprocessing>
+                        <step>
+                            <type>CSV_TO_JSON</type>
+                            <params>;
+
+0</params>
+                        </step>
+                    </preprocessing>
+                </item>
+                <item>
+                    <name>Unsupported items by type without will be deleted</name>
+                    <key>unsupported[&quot;by type without will be deleted&quot;]</key>
+                    <delay>10m</delay>
+                    <history>0</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <applications>
+                        <application>
+                            <name>Zabbix server</name>
+                        </application>
+                    </applications>
+                    <preprocessing>
+                        <step>
+                            <type>CSV_TO_JSON</type>
+                            <params>;
+
+0</params>
+                        </step>
+                    </preprocessing>
+                </item>
+                <item>
+                    <name>Unsupported items without will be deleted</name>
+                    <key>unsupported[&quot;count without will be deleted&quot;]</key>
+                    <delay>10m</delay>
+                    <applications>
+                        <application>
+                            <name>Zabbix server</name>
+                        </application>
+                    </applications>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Discovery Unsupported Type Without Deleted</name>
+                    <type>DEPENDENT</type>
+                    <key>discovery.unsupported.type.without.deleted</key>
+                    <delay>0</delay>
+                    <lifetime>10d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#TYPE}: Unsupported items without deleted</name>
+                            <type>DEPENDENT</type>
+                            <key>count.unsupported.without.deleted[&quot;{#TYPE}&quot;]</key>
+                            <delay>0</delay>
+                            <applications>
+                                <application>
+                                    <name>Zabbix server</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.[?(@.1 == &quot;{#TYPE}&quot;)].2.first()</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>unsupported[&quot;by type without will be deleted&quot;]</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}&gt;{$UNSUPPORTED_WARN:&quot;{#TYPE}&quot;} and &#13;
+{last(#2)}&gt;{$UNSUPPORTED_WARN:&quot;{#TYPE}&quot;} and&#13;
+{nodata(25m)}=0</expression>
+                                    <name>{HOST.NAME}: {#TYPE}: Unsupported items without deleted &gt; {$UNSUPPORTED_WARN:&quot;{#TYPE}&quot;}</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                    <master_item>
+                        <key>unsupported[&quot;by type without will be deleted&quot;]</key>
+                    </master_item>
+                    <lld_macro_paths>
+                        <lld_macro_path>
+                            <lld_macro>{#TYPE}</lld_macro>
+                            <path>$.1</path>
+                        </lld_macro_path>
+                    </lld_macro_paths>
+                    <overrides>
+                        <override>
+                            <name>JMX agent check</name>
+                            <step>1</step>
+                            <filter>
+                                <conditions>
+                                    <condition>
+                                        <macro>{#TYPE}</macro>
+                                        <value>JMX agent</value>
+                                        <formulaid>A</formulaid>
+                                    </condition>
+                                </conditions>
+                            </filter>
+                            <operations>
+                                <operation>
+                                    <operationobject>TRIGGER_PROTOTYPE</operationobject>
+                                    <operator>LIKE</operator>
+                                    <value>JMX agent</value>
+                                    <status>ENABLED</status>
+                                    <discover>DISCOVER</discover>
+                                </operation>
+                            </operations>
+                        </override>
+                    </overrides>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Discovery Unsupported Type</name>
+                    <type>DEPENDENT</type>
+                    <key>disocvery.unsupported.type</key>
+                    <delay>0</delay>
+                    <lifetime>10d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#TYPE}: Unsupported items</name>
+                            <type>DEPENDENT</type>
+                            <key>count.unsupported[&quot;{#TYPE}&quot;]</key>
+                            <delay>0</delay>
+                            <applications>
+                                <application>
+                                    <name>Zabbix server</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.[?(@.1 == &quot;{#TYPE}&quot;)].2.first()</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>unsupported[&quot;by type&quot;]</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{nodata(25m)}=1</expression>
+                                    <name>{HOST.NAME}: {#TYPE}: Unsupported items didn`t collect</name>
+                                    <status>DISABLED</status>
+                                    <discover>NO_DISCOVER</discover>
+                                    <priority>AVERAGE</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                    <master_item>
+                        <key>unsupported[&quot;by type&quot;]</key>
+                    </master_item>
+                    <lld_macro_paths>
+                        <lld_macro_path>
+                            <lld_macro>{#TYPE}</lld_macro>
+                            <path>$.1</path>
+                        </lld_macro_path>
+                    </lld_macro_paths>
+                    <overrides>
+                        <override>
+                            <name>JMX agent check</name>
+                            <step>1</step>
+                            <filter>
+                                <conditions>
+                                    <condition>
+                                        <macro>{#TYPE}</macro>
+                                        <value>JMX agent</value>
+                                        <formulaid>A</formulaid>
+                                    </condition>
+                                </conditions>
+                            </filter>
+                            <operations>
+                                <operation>
+                                    <operationobject>TRIGGER_PROTOTYPE</operationobject>
+                                    <operator>LIKE</operator>
+                                    <value>JMX agent</value>
+                                    <status>ENABLED</status>
+                                    <discover>DISCOVER</discover>
+                                </operation>
+                            </operations>
+                        </override>
+                    </overrides>
+                </discovery_rule>
+            </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$UNSUPPORTED_WARN}</macro>
+                    <value>0</value>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>
